@@ -14,7 +14,7 @@ const Register: FC<registerProps> = () => {
       initialValues={{ username: '', password: '' }}
       onSubmit={values => { console.log(values); }}
     >
-      {({ values, handleChange }) => (
+      {({ values, handleChange, isSubmitting }) => (
         <Form>
           <InputField
             name='username'
@@ -25,10 +25,13 @@ const Register: FC<registerProps> = () => {
             name='password'
             placeholder='password'
             label='Password'
+            type='password'
           />
           <Button
             type='submit'
             colorScheme='teal'
+            marginTop={4}
+            isLoading={isSubmitting}
           >
             Submit
           </Button>

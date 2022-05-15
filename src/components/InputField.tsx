@@ -8,14 +8,14 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   placeholder: string,
 }
 
-const InputField: FC<InputFieldProps> = (props) => {
+const InputField: FC<InputFieldProps> = ({ label, size, ...props }) => {
 
   const [field, { error }] = useField(props);
 
   return (
     <FormControl isInvalid={!!error}>
-      <FormLabel htmlFor={field.name}>{props.label}</FormLabel>
-      <Input {...field} id={field.name} placeholder={props.placeholder} />
+      <FormLabel htmlFor={field.name}>{label}</FormLabel>
+      <Input {...field} id={field.name} {...props} />
       {error && <FormErrorMessage>{error}</FormErrorMessage>}
     </FormControl>
   )
