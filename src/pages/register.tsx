@@ -34,7 +34,7 @@ const Register: FC<registerProps> = () => {
       initialValues={{ username: '', password: '' }}
       onSubmit={values => { registerUser(values) }}
     >
-      {({ values, handleChange, isSubmitting }) => (
+      {({ isSubmitting }) => (
         <Form>
           <InputField
             name='username'
