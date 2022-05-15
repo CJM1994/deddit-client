@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Form, Formik } from 'formik';
 import InputField from '../components/InputField';
 import { Button } from '@chakra-ui/react';
-import { useQuery } from 'urql';
+import { useMutation } from 'urql';
 
 interface registerProps {
 
@@ -10,20 +10,29 @@ interface registerProps {
 
 const Register: FC<registerProps> = () => {
 
-  const helloQuery = `
-  query Query {
-    hello
+  const RegisterUser = `
+  mutation Register($username: String!, $password: String!) {
+    register(input: {username: $username, password: $password}) {
+      user {
+        id
+        username
+        createdAt
+        updatedAt
+      }
+      errors {
+        field
+        message
+      }
+    }
   }
   `
 
-  const [result, reexecuteQuery] = useQuery({
-    query: helloQuery
-  })
+  const [registerUserResult, registerUser] = useMutation(RegisterUser)
 
   return (
     <Formik
       initialValues={{ username: '', password: '' }}
-      onSubmit={values => { console.log(values); }}
+      onSubmit={values => { registerUser(values) }}
     >
       {({ values, handleChange, isSubmitting }) => (
         <Form>
@@ -46,7 +55,6 @@ const Register: FC<registerProps> = () => {
           >
             Submit
           </Button>
-          <p>{`${result.data.hello}`}</p>
         </Form>
       )}
     </Formik>
