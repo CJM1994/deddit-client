@@ -14,9 +14,11 @@
     "@emotion/styled": "^11",
     "formik": "^2.2.9",
     "framer-motion": "^6.3.3",
+    "graphql": "^16.5.0",
     "next": "12.1.6",
     "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "react-dom": "18.1.0",
+    "urql": "^2.2.0"
   },
   "devDependencies": {
     "@types/node": "17.0.33",

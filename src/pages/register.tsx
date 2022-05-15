@@ -2,12 +2,23 @@ import { FC } from 'react';
 import { Form, Formik } from 'formik';
 import InputField from '../components/InputField';
 import { Button } from '@chakra-ui/react';
+import { useQuery } from 'urql';
 
 interface registerProps {
 
 }
 
 const Register: FC<registerProps> = () => {
+
+  const helloQuery = `
+  query Query {
+    hello
+  }
+  `
+
+  const [result, reexecuteQuery] = useQuery({
+    query: helloQuery
+  })
 
   return (
     <Formik
@@ -35,6 +46,7 @@ const Register: FC<registerProps> = () => {
           >
             Submit
           </Button>
+          <p>{`${result.data.hello}`}</p>
         </Form>
       )}
     </Formik>

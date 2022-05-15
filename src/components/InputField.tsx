@@ -5,10 +5,9 @@ import { FC, InputHTMLAttributes } from 'react'
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   name: string,
   label: string,
-  placeholder: string,
 }
 
-const InputField: FC<InputFieldProps> = ({ label, size, ...props }) => {
+const InputField: FC<InputFieldProps> = ({ label, size='_', ...props }) => {
 
   const [field, { error }] = useField(props);
 
