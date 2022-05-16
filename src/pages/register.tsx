@@ -31,7 +31,7 @@ const Register: FC<registerProps> = () => {
   const [registerUserResult, registerUser] = useMutation(RegisterUser)
 
   return (
-    <Wrapper>
+    <Wrapper variant='regular'>
       <Formik
         initialValues={{ username: '', password: '' }}
         onSubmit={values => { return registerUser(values) }}

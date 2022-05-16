@@ -3,17 +3,18 @@ import { FC } from 'react'
 
 interface WrapperProps {
   children: JSX.Element;
+  variant: 'regular' | 'small';
 }
 
-const Wrapper: FC<WrapperProps> = (props) => {
+const Wrapper: FC<WrapperProps> = ({ children, variant }) => {
   return (
     <Box
       marginTop={8}
-      maxWidth={'800px'}
+      maxWidth={variant === 'regular' ? '800px' : '400px'}
       width={'100%'}
       marginX={'auto'}
     >
-      {props.children}
+      {children}
     </Box>
   )
 }
