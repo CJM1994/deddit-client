@@ -1,5 +1,5 @@
 import { Box, Flex, Link } from '@chakra-ui/react';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import NextLink from 'next/link';
 import { useMeQuery } from '../generated/graphql';
 
@@ -7,12 +7,13 @@ interface NavbarProps { }
 
 const Navbar: FC<NavbarProps> = () => {
 
-  const [{ data, error }] = useMeQuery();
+  const [{ data, fetching }] = useMeQuery();
   let userLinks = null;
-  console.log('data', data)
-  console.log('error', error)
 
-  if (!data?.me) {
+  // data is loading
+  if (fetching) {
+    // user is not logged in
+  } else if (!data?.me) {
     userLinks =
       <>
         <Box marginLeft='auto'>
@@ -24,6 +25,13 @@ const Navbar: FC<NavbarProps> = () => {
           </NextLink>
         </Box>
       </>
+    // user is logged in
+  } else {
+    userLinks =
+      <Box marginLeft='auto'>
+        {data.me.username}
+        <Link marginLeft={2}>Logout</Link>
+      </Box>
   }
 
   return (

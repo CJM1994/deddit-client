@@ -2,8 +2,18 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
 import { createClient, dedupExchange, fetchExchange, Provider } from 'urql'
-import { cacheExchange } from '@urql/exchange-graphcache'
-import { MeDocument } from '../generated/graphql'
+import { cacheExchange, QueryInput, Cache } from '@urql/exchange-graphcache'
+import { devtoolsExchange } from '@urql/devtools'
+import { LoginMutation, MeDocument, MeQuery } from '../generated/graphql'
+
+function cacheUpdateQuery<Result, Query>(
+  cache: Cache,
+  qi: QueryInput,
+  result: any,
+  fn: (r: Result, q: Query) => Query
+) {
+  return cache.updateQuery(qi, (data) => fn(result, data as any) as any);
+}
 
 // urql client for connecting to graphql
 const client = createClient({
@@ -13,20 +23,33 @@ const client = createClient({
     credentials: 'include'
   },
   // using graphCache to normalize caching, needed for login to present properly
-  exchanges: [dedupExchange, fetchExchange, cacheExchange({
-    updates: {
-      Mutation: {
-        login: (result, args, cache, info) => {
-          cache.writeFragment(MeDocument, {
-            id: args.id,
-            username: args.username,
-            createdAt: args.createdAt,
-            updatedAt: args.updatedAt
-          })
+  exchanges: [
+    dedupExchange, // dedup exchange first avoids unecessary work / requests
+    cacheExchange({ // looks at cache to rewrite the result of queries when something changes
+      updates: {
+        Mutation: {
+          login(result, args, cache, info) {
+            cacheUpdateQuery<LoginMutation, MeQuery>(
+              cache,
+              { query: MeDocument },
+              result,
+              (result, query) => {
+                if (result.login.errors) {
+                  return query;
+                } else {
+                  return {
+                    me: result.login.user,
+                  };
+                }
+              }
+            );
+          }
         }
       }
-    }
-  })]
+    }),
+    fetchExchange, // looks at fetch data, async so needs to go last
+    devtoolsExchange
+  ]
 })
 
 function MyApp({ Component, pageProps }: AppProps) {
