@@ -36,7 +36,7 @@ const Navbar: FC<NavbarProps> = () => {
 
   return (
     <Flex
-      background='tomato'
+      background='teal'
       padding={4}
     >
       {userLinks}

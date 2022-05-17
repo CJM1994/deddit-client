@@ -1,0 +1,4 @@
+fragment basicUserData on User {
+  id
+  username
+}

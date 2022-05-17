@@ -3,8 +3,7 @@ import type { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
 import { createClient, dedupExchange, fetchExchange, Provider } from 'urql'
 import { cacheExchange, QueryInput, Cache } from '@urql/exchange-graphcache'
-import { devtoolsExchange } from '@urql/devtools'
-import { LoginMutation, MeDocument, MeQuery } from '../generated/graphql'
+import { LoginMutation, MeDocument, MeQuery, RegisterMutation } from '../generated/graphql'
 
 function cacheUpdateQuery<Result, Query>(
   cache: Cache,
@@ -43,12 +42,27 @@ const client = createClient({
                 }
               }
             );
+          },
+          register(result, args, cache, info) {
+            cacheUpdateQuery<RegisterMutation, MeQuery>(
+              cache,
+              { query: MeDocument },
+              result,
+              (result, query) => {
+                if (result.register.errors) {
+                  return query;
+                } else {
+                  return {
+                    me: result.register.user,
+                  };
+                }
+              }
+            );
           }
         }
       }
     }),
     fetchExchange, // looks at fetch data, async so needs to go last
-    devtoolsExchange
   ]
 })
 
