@@ -1,10 +1,14 @@
 import type { NextPage } from 'next'
+import Navbar from '../components/Navbar'
 
 const Home: NextPage = () => {
   return (
-    <div>
-      Hello World!
-    </div>
+    <>
+      <Navbar />
+      <div>
+        Hello World!
+      </div>
+    </>
   )
 }
 

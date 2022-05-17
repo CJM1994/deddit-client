@@ -11,8 +11,8 @@ interface registerProps { }
 
 const Register: FC<registerProps> = () => {
 
-  const [registerUserResult, registerUser] = useRegisterMutation()
-  const router = useRouter()
+  const [registerUserResult, registerUser] = useRegisterMutation();
+  const router = useRouter();
 
   return (
     <Wrapper variant='small'>
