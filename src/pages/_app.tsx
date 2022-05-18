@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
 import { createClient, dedupExchange, fetchExchange, Provider } from 'urql'
 import { cacheExchange, QueryInput, Cache } from '@urql/exchange-graphcache'
-import { LoginMutation, MeDocument, MeQuery, RegisterMutation } from '../generated/graphql'
+import { LoginMutation, LogoutMutation, MeDocument, MeQuery, RegisterMutation } from '../generated/graphql'
 
 function cacheUpdateQuery<Result, Query>(
   cache: Cache,
@@ -27,6 +27,21 @@ const client = createClient({
     cacheExchange({ // looks at cache to rewrite the result of queries when something changes
       updates: {
         Mutation: {
+          logout(result, args, cache, info) {
+            // cacheUpdateQuery updates the query itself when a mutation happens (in this case)
+            cacheUpdateQuery<LogoutMutation, MeQuery>(
+              cache,
+              { query: MeDocument },
+              result,
+              (result, query) => {
+                if (result.logout === true) {
+                  return { me: null };
+                } else {
+                  return { query };
+                }
+              }
+            )
+          },
           login(result, args, cache, info) {
             cacheUpdateQuery<LoginMutation, MeQuery>(
               cache,
