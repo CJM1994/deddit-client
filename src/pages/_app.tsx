@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
 import { createClient, dedupExchange, fetchExchange, Provider } from 'urql'
 import { cacheExchange, QueryInput, Cache } from '@urql/exchange-graphcache'
-import { LoginMutation, LogoutMutation, MeDocument, MeQuery, RegisterMutation } from '../generated/graphql'
+import { LoginMutation, LogoutMutation, MeDocument, MeQuery, RegisterMutation, User } from '../generated/graphql'
 
 function cacheUpdateQuery<Result, Query>(
   cache: Cache,
@@ -33,11 +33,11 @@ const client = createClient({
               cache,
               { query: MeDocument },
               result,
-              (result, query) => {
+              (result) => {
                 if (result.logout === true) {
                   return { me: null };
                 } else {
-                  return { query };
+                  return { me: {username: 'logout error', id: 0, __typename: 'User'} };
                 }
               }
             )
